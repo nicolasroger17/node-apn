@@ -300,6 +300,34 @@ describe("Notification", function() {
 				expect(note.category).to.be.undefined;
 			});
 		});
+
+    describe("threadId property", function() {
+      it("defaults to undefined", function() {
+        expect(note.threadId).to.be.undefined;
+      });
+
+      it("can be set to a string", function() {
+        note.threadId = "the-thread-id";
+        expect(note.threadId).to.eql("the-thread-id");
+      });
+
+      it("resets the `compiled` flag", function() {
+        note.compiled = true;
+        note.threadId = "the-thread-id";
+        expect(note.compiled).to.be.false;
+      });
+
+      it("cannot be set to an object", function() {
+        note.threadId = {};
+        expect(note.threadId).to.be.undefined;
+      });
+
+      it("can be set to undefined", function() {
+        note.threadId = "the-thread-id";
+        note.threadId = undefined;
+        expect(note.threadId).to.be.undefined;
+      });
+    });
 	});
 
 	describe("length", function() {
@@ -707,7 +735,7 @@ describe("Notification", function() {
 			describe("with newsstandAvailable property", function() {
 				it("sets the 'content-available' flag", function() {
 					note.contentAvailable = true;
-					
+
 					expect(note.toJSON().aps["content-available"]).to.eql(1);
 				});
 			});
@@ -722,6 +750,12 @@ describe("Notification", function() {
 				note.category = "mouse";
 
 				expect(note.toJSON().aps.category).to.eql("mouse");
+			});
+
+			it("includes the threadId value", function() {
+				note.threadId = "threadId";
+
+				expect(note.toJSON().aps["thread-id"]).to.eql("threadId");
 			});
 		});
 	});
